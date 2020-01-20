@@ -1,0 +1,40 @@
+```{r}
+#Instalar pacotes
+install.packages("tidyverse")
+install.packages("data.table")
+install.packages("ggplot2")
+
+#Upload dos pacotes que vamos utilizar na análise
+library(tidyverse)
+library(data.table)
+library(ggplot2)
+
+#Lendo arquivo com tweets @PedroCapetti
+capetti <- fread("https://raw.githubusercontent.com/pedrocapetti/aprendendo_R/master/tweets_pedrocapetti.csv", encoding = "UTF-8")
+
+#Vendo o formato do arquivo que estamos lendo
+head(capetti)
+
+#Descobrindo qual o tweet tem mais retweets
+capetti_rt <- capetti %>% arrange(desc(retweet_count))
+capetti_rt$text[1]
+
+#Descobrindo qual é a plataforma que @PedroCapetti mais utiliza para tweetar
+capetti_plat <- capetti %>% group_by(source) %>% count(screen_name)
+
+#Fazendo um gráfico da plataforma que mais utiliza para tweetar
+ggplot (capetti_plat, aes(x=source, y=n)) + geom_col()
+
+#Descobrindo quem você mais retweeta no Twitter
+capetti_fa <- capetti %>% group_by(retweeted_status_screen_name) %>% count(retweeted_status_screen_name) %>% arrange(desc(n))
+capetti_fa
+
+#Tentando verificar se o número de tweets bate com o inicial
+sum(capetti_fa$n)
+
+#Vamos descobrir o tweet com maior número de favoritos
+capetti_fav <- capetti %>% arrange(desc(favorite_count))
+capetti_fav$text[1]
+
+```
+
